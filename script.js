@@ -1,60 +1,64 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const sobreWrapper = document.querySelector('.sobre-wrapper');
-    const portada = document.querySelector('.portada');
-    const destello = document.createElement('div');
-    destello.className = 'destello';
-    document.body.appendChild(destello);
+    const sobreCerrado = document.querySelector('.sobre-cerrado');
+    const sobreAbierto = document.querySelector('.sobre-abierto');
+    const portada = document.getElementById('portada');
+    const invitacion = document.getElementById('invitacion');
     
-    // Contenido principal (oculto inicialmente)
-    const contenidoPrincipal = document.querySelector('.contenedor-principal');
-    if (contenidoPrincipal) contenidoPrincipal.style.display = 'none';
+    // Efecto al hacer clic en el sobre
+    sobreCerrado.addEventListener('click', abrirSobre);
+    sobreAbierto.addEventListener('click', abrirSobre);
     
-    function abrirInvitacion() {
-        // Desactivar múltiples clics
-        sobreWrapper.style.pointerEvents = 'none';
+    function abrirSobre() {
+        // Deshabilitar más clics durante la animación
+        sobreCerrado.style.pointerEvents = 'none';
+        sobreAbierto.style.pointerEvents = 'none';
         
-        // Añadir clase para abrir el sobre
-        sobreWrapper.classList.add('abierto');
+        // Animación de apertura del sobre
+        sobreCerrado.style.opacity = '0';
+        sobreCerrado.style.transform = 'scale(0.8) rotate(-5deg)';
         
-        // Activar destello
-        destello.classList.add('active');
+        sobreAbierto.style.opacity = '1';
+        sobreAbierto.style.transform = 'scale(1) rotate(0deg)';
         
-        // Ocultar portada y mostrar contenido después de la transición
-        setTimeout(function() {
+        // Destello de transición
+        const flash = document.createElement('div');
+        flash.className = 'flash';
+        document.body.appendChild(flash);
+        
+        // Animación del destello
+        setTimeout(() => {
+            flash.style.opacity = '0.9';
+            
+            setTimeout(() => {
+                flash.style.opacity = '0';
+                
+                // Eliminar el destello después de la animación
+                setTimeout(() => {
+                    flash.remove();
+                }, 500);
+            }, 300);
+        }, 50);
+        
+        // Ocultar portada y mostrar invitación
+        setTimeout(() => {
             portada.style.opacity = '0';
-            portada.style.pointerEvents = 'none';
             
-            if (contenidoPrincipal) {
-                contenidoPrincipal.style.display = 'block';
-                // Desplazamiento suave al inicio
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-            
-            // Quitar el destello
-            setTimeout(function() {
-                destello.classList.remove('active');
-            }, 1000);
-            
-        }, 800);
+            setTimeout(() => {
+                portada.style.display = 'none';
+                invitacion.style.display = 'block';
+                
+                // Fade in de la invitación
+                let opacity = 0;
+                const fadeIn = setInterval(() => {
+                    opacity += 0.05;
+                    invitacion.style.opacity = opacity;
+                    if (opacity >= 1) clearInterval(fadeIn);
+                }, 30);
+            }, 500);
+        }, 700);
     }
-    
-    // Eventos para desktop y móvil
-    sobreWrapper.addEventListener('click', abrirInvitacion);
-    
-    // Optimización para touch
-    sobreWrapper.addEventListener('touchend', function(e) {
-        e.preventDefault();
-        abrirInvitacion();
-    });
-    
-    // Prevenir zoom no deseado
-    document.addEventListener('dblclick', function(e) {
-        e.preventDefault();
-    }, { passive: false });
-    
-    // Prevenir scroll durante la portada
-    document.body.style.overflow = 'hidden';
 });
+
 document.addEventListener('DOMContentLoaded', function() {
     const imagenMusica = document.getElementById('imagenMusica');
     const audioPlayer = document.getElementById('audioPlayer');
