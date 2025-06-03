@@ -174,7 +174,7 @@ body {
     max-height: 400px;
     
 }
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .sobre-container {
         gap: 15px;
     }
