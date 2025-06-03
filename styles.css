@@ -125,11 +125,7 @@ body {
         background-attachment: scroll;
     }
 }
-
-
-
-
-/* Portada */
+/* Portada - Versión móvil optimizada */
 .portada {
     position: fixed;
     top: 0;
@@ -142,48 +138,31 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    transition: opacity 1s ease-out;
+    transition: opacity 0.8s ease-out;
 }
 
 .sobre-container {
     text-align: center;
-    animation: flotar 20s ease-in-out infinite;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 30px; /* Espacio entre el sobre y el texto */
-}
-
-.instruccion {
-    text-align: center;
-    margin-top: 20; /* Eliminamos el margen superior anterior */
-    font-family: 'Cinzel Decorative', cursive;
-    color: #fff;
-    font-size: 1.4rem;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7),
-                 0 0 5px rgba(255, 255, 255, 0.3);
-    order: 2; /* Aseguramos que el texto vaya después del sobre */
+    gap: 20px;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .sobre-wrapper {
-    order: 1; /* Aseguramos que el sobre vaya primero */
     position: relative;
-    width: 80vmin;
-    height: 80vmin;
-    max-width: 400px; /* Límite máximo */
-    max-height: 400px;
-    
-}
-@media (max-width: 768px) {
-    .sobre-container {
-        gap: 15px;
-    }
-    
-    .instruccion {
-        font-size: 1rem;
-        max-width: 50%; /* Para que no ocupe todo el ancho en móviles */
-        text-align: center;
-    }
+    width: 90vmin;
+    height: 90vmin;
+    max-width: 750px;
+    max-height: 750px;
+    min-width: 550px;
+    min-height: 550px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    animation: flotar 3s ease-in-out infinite alternate;
 }
 
 .sobre {
@@ -191,49 +170,97 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: 110%;
-    margin: 0 auto;
+    height: 100%;
     object-fit: contain;
-    transition: opacity 0.7s ease, transform 0.5s ease;
-    filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.3));
-    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
 }
 
 .sobre-cerrado {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) rotate(0deg);
 }
 
 .sobre-abierto {
     opacity: 0;
-    transform: scale(0.9);
+    transform: scale(1.1) rotate(5deg);
 }
 
-.sobre-wrapper:hover .sobre-cerrado {
-    transform: scale(1);
-    filter: drop-shadow(0 15px 20px rgba(0, 0, 0, 0.4));
+.sobre-wrapper.abierto .sobre-cerrado {
+    opacity: 0;
+    transform: scale(0.9) rotate(-5deg);
 }
 
-/* Cuando el sobre está abierto */
-.sobre-abierto.visible {
+.sobre-wrapper.abierto .sobre-abierto {
     opacity: 1;
-    transform: scale(1);
-}
-
-.sobre-cerrado.hidden {
-    opacity: 1;
-    transform: scale(0.9);
+    transform: scale(1) rotate(0deg);
 }
 
 .instruccion {
-    text-align: center;
-    margin-top: 100px;
     font-family: 'Great Vibes', cursive;
     color: #000000;
-    font-size: 2.5rem;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7),
+    font-size: 2.2rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3),
                  0 0 5px rgba(255, 255, 255, 0.3);
+    text-align: center;
+    margin-top: 10px;
+    line-height: 1.2;
+    max-width: 80%;
+}
+
+/* Efecto de destello */
+.destello {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease-out;
+}
+
+.destello.active {
+    opacity: 1;
+}
+
+/* Animación de flotar más suave */
+@keyframes flotar {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-15px); }
+}
+
+/* Efecto al tocar el sobre */
+.sobre-wrapper:active {
+    transform: scale(0.95);
+}
+
+/* Media queries para ajustes específicos */
+@media (max-width: 768px) {
+    .sobre-wrapper {
+        width: 85vmin;
+        height: 85vmin;
+    }
     
+    .instruccion {
+        font-size: 1.8rem;
+        max-width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    .sobre-wrapper {
+        width: 95vmin;
+        height: 95vmin;
+        max-width: 320px;
+        max-height: 320px;
+    }
+    
+    .instruccion {
+        font-size: 1.5rem;
+    }
 }
 
 
