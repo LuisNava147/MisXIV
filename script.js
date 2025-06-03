@@ -1,100 +1,60 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const sobreCerrado = document.querySelector('.sobre-cerrado');
-    const sobreAbierto = document.querySelector('.sobre-abierto');
-    const portada = document.getElementById('portada');
-    const invitacion = document.getElementById('invitacion');
+    const sobreWrapper = document.querySelector('.sobre-wrapper');
+    const portada = document.querySelector('.portada');
+    const destello = document.createElement('div');
+    destello.className = 'destello';
+    document.body.appendChild(destello);
     
-    // Efecto al hacer clic en el sobre
-    sobreCerrado.addEventListener('click', abrirSobre);
-    sobreAbierto.addEventListener('click', abrirSobre);
+    // Contenido principal (oculto inicialmente)
+    const contenidoPrincipal = document.querySelector('.contenedor-principal');
+    if (contenidoPrincipal) contenidoPrincipal.style.display = 'none';
     
-    function abrirSobre() {
-        // Deshabilitar más clics durante la animación
-        sobreCerrado.style.pointerEvents = 'none';
-        sobreAbierto.style.pointerEvents = 'none';
+    function abrirInvitacion() {
+        // Desactivar múltiples clics
+        sobreWrapper.style.pointerEvents = 'none';
         
-        // Transición suave entre sobres
-        sobreCerrado.classList.add('hidden');
-        sobreAbierto.classList.add('visible');
+        // Añadir clase para abrir el sobre
+        sobreWrapper.classList.add('abierto');
         
-        // Esperar a que termine la transición del sobre
-        setTimeout(() => {
-            // Crear efecto de destello
-            const flash = document.createElement('div');
-            flash.className = 'flash';
-            document.body.appendChild(flash);
+        // Activar destello
+        destello.classList.add('active');
+        
+        // Ocultar portada y mostrar contenido después de la transición
+        setTimeout(function() {
+            portada.style.opacity = '0';
+            portada.style.pointerEvents = 'none';
             
-            // Animación del destello
-            flash.animate([
-                { opacity: 0 },
-                { opacity: 0.9 },
-                { opacity: 0 }
-            ], {
-                duration: 1000,
-                easing: 'ease-out'
-            });
+            if (contenidoPrincipal) {
+                contenidoPrincipal.style.display = 'block';
+                // Desplazamiento suave al inicio
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
             
-            // Ocultar portada y mostrar invitación después del destello
-            setTimeout(() => {
-                portada.style.opacity = '0';
-                setTimeout(() => {
-                    portada.style.display = 'none';
-                    invitacion.style.display = 'block';
-                    
-                    // Fade in de la invitación
-                    let opacity = 0;
-                    const fadeInInterval = setInterval(() => {
-                        opacity += 0.05;
-                        invitacion.style.opacity = opacity;
-                        if (opacity >= 1) clearInterval(fadeInInterval);
-                    }, 50);
-                    
-                    // Configurar observador de intersección para animaciones al hacer scroll
-                    setupIntersectionObserver();
-                }, 1000);
-            }, 500);
+            // Quitar el destello
+            setTimeout(function() {
+                destello.classList.remove('active');
+            }, 1000);
             
-            // Eliminar el elemento flash después de la animación
-            setTimeout(() => {
-                flash.remove();
-            }, 1500);
-        }, 700); // Tiempo para que complete la transición del sobre
+        }, 800);
     }
     
-   // Configuración del Intersection Observer
-function setupIntersectionObserver() {
-    const secciones = document.querySelectorAll('seccion:not(.seccion-fullscreen)');
+    // Eventos para desktop y móvil
+    sobreWrapper.addEventListener('click', abrirInvitacion);
     
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, { threshold: 0.1 });
-    
-    secciones.forEach(seccion => {
-        observer.observe(seccion);
+    // Optimización para touch
+    sobreWrapper.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        abrirInvitacion();
     });
     
-    secciones.forEach((seccion, index) => {
-        // Aplica un pequeño retraso basado en la posición
-        seccion.style.transitionDelay = `${index * 0.1}s`;
-        observer.observe(seccion);
-    });
-}
-
-// Llamar a la función cuando la invitación se muestre
-document.addEventListener('DOMContentLoaded', function() {
-    // ... (código existente del sobre)
+    // Prevenir zoom no deseado
+    document.addEventListener('dblclick', function(e) {
+        e.preventDefault();
+    }, { passive: false });
     
-    // Cuando se abre la invitación:
-    setTimeout(() => {
-        setupIntersectionObserver();
-    }, 1000);
+    // Prevenir scroll durante la portada
+    document.body.style.overflow = 'hidden';
 });
-});
-
 document.addEventListener('DOMContentLoaded', function() {
     const imagenMusica = document.getElementById('imagenMusica');
     const audioPlayer = document.getElementById('audioPlayer');
